@@ -1,5 +1,6 @@
 from pytesseract import pytesseract
 import cv2
+import xml
 import PySimpleGUI as sg
 import os 
 
@@ -11,16 +12,19 @@ class Janela():
         layout = [
             [sg.Text('Selecione uma imagem:')],
             [sg.InputText(key='file_path'),
-            sg.FileBrowse(initial_folder = working_directory, key = 'imagemImportada', file_types =[('Arquivos de imagem', '.png .jpeg')]),
+            sg.FileBrowse(target = 'file_path', initial_folder = working_directory, file_types =[('Arquivos de imagem', '.png .jpeg')]),
             sg.Button('Importar'),
-            #sg.Output(size = (40,10))
+            sg.Output(size = (40,40))
             ]
         ]
         self.criarJanela = sg.Window('Leitor de Notas Fiscais').layout(layout)
 
-    def leitorImagem(endereco_imagem):
+    def leitorImagem(self, endereco_imagem):
         arquivo = cv2.imread(endereco_imagem)
-        texto = pytesseract.image_to_string(arquivo)
+        texto = pytesseract.image_to_alto_xml(arquivo)
+        #f =  open("myxmlfile.xml", "wb")
+        #f.write(texto)
+        #f.close()
         return texto
 
     def Iniciar(self):
@@ -30,9 +34,9 @@ class Janela():
                 break
 
             if self.evento == 'Importar':
+                print(self.values['file_path'])
                 endereco_imagem = self.values['file_path']
-                print(leitorImagem(endereco_imagem))
+                print(self.leitorImagem(endereco_imagem))
 
 tela = Janela()
 tela.Iniciar()
-tela.Close()
