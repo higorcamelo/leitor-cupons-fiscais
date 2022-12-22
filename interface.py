@@ -1,3 +1,5 @@
+from pytesseract import pytesseract
+import cv2
 import PySimpleGUI as sg
 import os 
 
@@ -8,15 +10,29 @@ class Janela():
         #sg.Theme('Reddit')
         layout = [
             [sg.Text('Selecione uma imagem:')],
-            [sg.InputText(key='-FILE_PATH-'),
-            sg.FileBrowse(initial_folder = working_directory, file_types =[('Arquivos de imagem', '.png .jpeg')]),
-            sg.Button('Importar'), sg.Exit()]
+            [sg.InputText(key='file_path'),
+            sg.FileBrowse(initial_folder = working_directory, key = 'imagemImportada', file_types =[('Arquivos de imagem', '.png .jpeg')]),
+            sg.Button('Importar'),
+            #sg.Output(size = (40,10))
+            ]
         ]
-        criarJanela = sg.Window('Leitor de Notas Fiscais').layout(layout)
-        self.buttons = criarJanela.Read()
+        self.criarJanela = sg.Window('Leitor de Notas Fiscais').layout(layout)
+
+    def leitorImagem(endereco_imagem):
+        arquivo = cv2.imread(endereco_imagem)
+        texto = pytesseract.image_to_string(arquivo)
+        return texto
 
     def Iniciar(self):
-        print(self.values)
+        while True:
+            self.evento, self.values = self.criarJanela.Read()
+            if self.evento == sg.WIN_CLOSED:
+                break
+
+            if self.evento == 'Importar':
+                endereco_imagem = self.values['file_path']
+                print(leitorImagem(endereco_imagem))
 
 tela = Janela()
 tela.Iniciar()
+tela.Close()
