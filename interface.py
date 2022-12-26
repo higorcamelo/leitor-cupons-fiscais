@@ -14,7 +14,7 @@ class Janela():
             [sg.InputText(key='file_path'),
             sg.FileBrowse(target = 'file_path', initial_folder = working_directory, file_types =[('Arquivos de imagem', '.png .jpeg')]),
             sg.Button('Importar'),
-            sg.Output(size = (40,40))
+            sg.Output(size = (100,40))
             ]
         ]
         self.criarJanela = sg.Window('Leitor de Notas Fiscais').layout(layout)
@@ -22,9 +22,9 @@ class Janela():
     def leitorImagem(self, endereco_imagem):
         arquivo = cv2.imread(endereco_imagem)
         texto = pytesseract.image_to_alto_xml(arquivo)
-        #f =  open("myxmlfile.xml", "wb")
-        #f.write(texto)
-        #f.close()
+        f =  open("testexml.xml", "wb")
+        f.write(texto)
+        f.close()
         return texto
 
     def Iniciar(self):
