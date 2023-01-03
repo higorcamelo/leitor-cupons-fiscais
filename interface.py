@@ -21,10 +21,7 @@ class Janela():
 
     def leitorImagem(self, endereco_imagem):
         arquivo = cv2.imread(endereco_imagem)
-        texto = pytesseract.image_to_alto_xml(arquivo)
-        f =  open("testexml.xml", "wb")
-        f.write(texto)
-        f.close()
+        texto = pytesseract.image_to_string(arquivo)
         return texto
 
     def Iniciar(self):
