@@ -4,7 +4,7 @@ import xml
 import PySimpleGUI as sg
 import os 
 
-working_directory = os.getcwd()
+diretorio = os.getcwd()
 
 class Janela():
     def __init__(self):
@@ -12,17 +12,18 @@ class Janela():
         layout = [
             [sg.Text('Selecione uma imagem:')],
             [sg.InputText(key='file_path'),
-            sg.FileBrowse(target = 'file_path', initial_folder = working_directory, file_types =[('Arquivos de imagem', '.png .jpeg')]),
+            sg.FileBrowse(target = 'file_path', initial_folder = diretorio, file_types =[('Arquivos de imagem', '.png .jpeg')]),
             sg.Button('Importar'),
             sg.Output(size = (100,40))
             ]
         ]
-        self.criarJanela = sg.Window('Leitor de Notas Fiscais').layout(layout)
+        self.criarJanela = sg.Window('Leitor de Cupons Fiscais').layout(layout)
 
     def leitorImagem(self, endereco_imagem):
         arquivo = cv2.imread(endereco_imagem)
         texto = pytesseract.image_to_string(arquivo)
         return texto
+
 
     def Iniciar(self):
         while True:
