@@ -1,6 +1,6 @@
 from pytesseract import pytesseract
 import cv2
-import xml
+import re
 import PySimpleGUI as sg
 import os 
 
@@ -20,9 +20,16 @@ class Janela():
         self.criarJanela = sg.Window('Leitor de Cupons Fiscais').layout(layout)
 
     def leitorImagem(self, endereco_imagem):
-        arquivo = cv2.imread(endereco_imagem)
-        texto = pytesseract.image_to_string(arquivo)
-        return texto
+        dict_itens = dict.fromkeys(['desc', 'qtd', 'valor'])
+        vetor_nomes = []
+        regex = re.compile(r'^[0-9]+\s+[0-9]+\s+((\S+(?:\s*\S*)*?)\s+([0-9]+(?:,[0-9]+)?)\s+\w\w)\s+.*\s+([0-9]+(?:,[0-9]+)?)$', flags=re.M)
+        texto_imagem = pytesseract.image_to_string(cv2.imread(endereco_imagem))
+
+        for match in regex.finditer(texto_imagem):
+            print("teste")
+            vetor_nomes.append(match.group(3))
+
+        return vetor_nomes
 
 
     def Iniciar(self):
