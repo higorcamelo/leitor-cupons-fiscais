@@ -47,6 +47,7 @@ class Janela():
         return True
 
     def Iniciar(self):
+        self.dados_itens = []
         while True:
             self.evento, self.values = self.criarJanela.Read()
             if self.evento == sg.WIN_CLOSED:
@@ -55,9 +56,9 @@ class Janela():
             if self.evento == 'Importar':
                 print(self.values['file_path'])
                 endereco_imagem = self.values['file_path']
-                dados_itens_temp = self.leitorImagem(endereco_imagem)
-                dados_itens = dados_itens + dados_itens_temp
-                print(dados_itens)
+                self.dados_itens_temp = self.leitorImagem(endereco_imagem)
+                self.dados_itens = self.dados_itens + self.dados_itens_temp
+                print(self.dados_itens)
 
             if self.evento == 'confirmar':
                 self.criar_csv(self.values['nome_arquivo'], self.dados_itens)
