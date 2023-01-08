@@ -1,9 +1,7 @@
 from pytesseract import pytesseract
-import csv
-import cv2
-import re
+import csv, os, cv2, re
 import PySimpleGUI as sg
-import os 
+import pandas as pd
 
 diretorio = os.getcwd()
 
@@ -14,9 +12,9 @@ class Janela():
             [sg.Text('Selecione uma imagem:'), sg.InputText(key='file_path'),
             sg.FileBrowse(target = 'file_path', initial_folder = diretorio, file_types =[('Arquivos de imagem', '.png .jpeg')]),
             sg.Button('Importar')],
-            [sg.Text('Nomeie seu arquivo:'), sg.InputText(key='nome_arquivo')],
+            [sg.Text('Nomeie seu arquivo (opcional):'), sg.InputText(key='nome_arquivo')],
             [sg.Button('Confirmar e exportar', key = 'confirmar')],
-            #sg.Output(size = (50,10))
+            #[sg.Output(size = (80,10))]
         ]
         self.criarJanela = sg.Window('Leitor de Cupons Fiscais').layout(layout)
 
@@ -33,16 +31,26 @@ class Janela():
             
             vetor_nomes.append(dict_itens.copy())
 
+        
         return vetor_nomes
 
-    def criar_csv(self, nome_arquivo, vetor_nomes):
-        if(nome_arquivo == None):
-            nome_arquivo = 'meuarquivo'
-        arquivo_csv = open('${nome_arquivo}.csv', 'w')
-        with open('${nome_arquivo}.csv','w', newline = '') as arquivo:
+    def criar_csv(self, nome_temp, vetor_nomes):
+        if(nome_temp == None):
+            nome_temp = 'meuarquivo'
+        
+        nome_arquivo = nome_temp + '.csv'
+        arquivo_csv = open(nome_arquivo, 'w')
+        with open(nome_arquivo,'w', newline = '') as arquivo:
             escreve = csv.DictWriter(arquivo, fieldnames = vetor_nomes[0].keys())
             escreve.writeheader()
             escreve.writerows(vetor_nomes)
+
+        df = pd.read_csv(nome_arquivo, decimal = ',')
+        soma = df['Valor'].sum()
+        
+
+        print(soma)
+
 
         return True
 
