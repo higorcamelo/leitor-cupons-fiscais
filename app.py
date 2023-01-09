@@ -7,14 +7,13 @@ diretorio = os.getcwd()
 
 class Janela():
     def __init__(self):
-        #sg.Theme('Reddit')
         layout = [
-            [sg.Text('Selecione uma imagem:'), sg.InputText(key='file_path'),
+            [sg.Push(), sg.Text('Selecione uma imagem:'), sg.InputText(key='file_path'),
             sg.FileBrowse(target = 'file_path', initial_folder = diretorio, file_types =[('Arquivos de imagem', '.png .jpeg')]),
             sg.Button('Importar')],
+            [sg.Output(size = (80,10))],
             [sg.Text('Nomeie seu arquivo (opcional):'), sg.InputText(key='nome_arquivo')],
             [sg.Button('Confirmar e exportar', key = 'confirmar')],
-            #[sg.Output(size = (80,10))]
         ]
         self.criarJanela = sg.Window('Leitor de Cupons Fiscais').layout(layout)
 
@@ -31,11 +30,10 @@ class Janela():
             
             vetor_nomes.append(dict_itens.copy())
 
-        
         return vetor_nomes
 
     def criar_csv(self, nome_temp, vetor_nomes):
-        if(nome_temp == None):
+        if(nome_temp == ''):
             nome_temp = 'meuarquivo'
         
         nome_arquivo = nome_temp + '.csv'
@@ -48,11 +46,9 @@ class Janela():
         df = pd.read_csv(nome_arquivo, decimal = ',')
         soma_itens = df['Quantidade'].sum()
         soma_valores = df['Valor'].sum()
-        df.loc[len(df)] = ['TOTAl', soma_itens, soma_valores]
+        df.loc[len(df)] = ['TOTAL', soma_itens, soma_valores]
         df.to_csv(nome_arquivo, mode='w', index = False, header = True)
-        print(soma_valores)
         print(df)
-
 
         return True
 
@@ -64,7 +60,7 @@ class Janela():
                 break
 
             if self.evento == 'Importar':
-                print(self.values['file_path'])
+                print(self.values['file_path']+'\n')
                 endereco_imagem = self.values['file_path']
                 self.dados_itens_temp = self.leitorImagem(endereco_imagem)
                 self.dados_itens = self.dados_itens + self.dados_itens_temp
@@ -72,8 +68,7 @@ class Janela():
 
             if self.evento == 'confirmar':
                 self.criar_csv(self.values['nome_arquivo'], self.dados_itens)
-                if(self.leitorImagem(endereco_imagem) == True):
-                    print('Operação realizada com sucesso!')
+                sg.popup('Operação realizada com sucesso!')
 
 tela = Janela()
 tela.Iniciar()
