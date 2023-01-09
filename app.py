@@ -46,10 +46,12 @@ class Janela():
             escreve.writerows(vetor_nomes)
 
         df = pd.read_csv(nome_arquivo, decimal = ',')
-        soma = df['Valor'].sum()
-        
-
-        print(soma)
+        soma_itens = df['Quantidade'].sum()
+        soma_valores = df['Valor'].sum()
+        df.loc[len(df)] = ['TOTAl', soma_itens, soma_valores]
+        df.to_csv(nome_arquivo, mode='w', index = False, header = True)
+        print(soma_valores)
+        print(df)
 
 
         return True
