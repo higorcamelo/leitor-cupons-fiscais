@@ -23,6 +23,9 @@ class Janela():
         regex = re.compile(r'^[0-9]+\s+[0-9]+\s+((\S+(?:\s*\S*)*?)\s+([0-9]+(?:,[0-9]+)?)\s+\w\w)\s+.*\s+([0-9]+(?:,[0-9]+)?)$', flags=re.M)
         texto_imagem = pytesseract.image_to_string(cv2.imread(endereco_imagem))
 
+        if(texto_imagem == ''):
+            sg.popup('Nenhuma informação foi encontrada')
+
         for match in regex.finditer(texto_imagem):
             dict_itens['Descricao'] = match.group(2)
             dict_itens['Quantidade'] = match.group(3)
