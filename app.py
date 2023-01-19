@@ -63,11 +63,14 @@ class Janela():
                 break
 
             if self.evento == 'Importar':
-                print(self.values['file_path']+'\n')
-                endereco_imagem = self.values['file_path']
-                self.dados_itens_temp = self.leitorImagem(endereco_imagem)
-                self.dados_itens = self.dados_itens + self.dados_itens_temp
-                print(self.dados_itens)
+                if( self.values['file_path'] == ''):
+                    sg.popup('Selecione um arquivo')
+                else:
+                    print(self.values['file_path']+'\n')
+                    endereco_imagem = self.values['file_path']
+                    self.dados_itens_temp = self.leitorImagem(endereco_imagem)
+                    self.dados_itens = self.dados_itens + self.dados_itens_temp
+                    print(self.dados_itens)
 
             if self.evento == 'confirmar':
                 self.criar_csv(self.values['nome_arquivo'], self.dados_itens)
